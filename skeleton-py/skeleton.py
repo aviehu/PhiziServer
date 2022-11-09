@@ -1,15 +1,15 @@
 import cv2 as cv
 import matplotlib.pyplot as plt
+import json as json
 
-
-inWidth = 368
-inHeight = 368
+inWidth = 640
+inHeight = 480
 thr = 0.2
 
-BODY_PARTS = { "Nose": 0, "Neck": 1, "RShoulder": 2, "RElbow": 3, "RWrist": 4,
-               "LShoulder": 5, "LElbow": 6, "LWrist": 7, "RHip": 8, "RKnee": 9,
-               "RAnkle": 10, "LHip": 11, "LKnee": 12, "LAnkle": 13, "REye": 14,
-               "LEye": 15, "REar": 16, "LEar": 17, "Background": 18 }
+BODY_PARTS = ["Nose", "Neck", "RShoulder", "RElbow", "RWrist",
+                             "LShoulder", "LElbow", "LWrist", "RHip", "RKnee",
+                             "RAnkle", "LHip", "LKnee", "LAnkle", "REye",
+                             "LEye", "REar", "LEar", "Background"]
 
 POSE_PAIRS = [ ["Neck", "RShoulder"], ["Neck", "LShoulder"], ["RShoulder", "RElbow"],
                ["RElbow", "RWrist"], ["LShoulder", "LElbow"], ["LElbow", "LWrist"],
@@ -17,9 +17,8 @@ POSE_PAIRS = [ ["Neck", "RShoulder"], ["Neck", "LShoulder"], ["RShoulder", "RElb
                ["LHip", "LKnee"], ["LKnee", "LAnkle"], ["Neck", "Nose"], ["Nose", "REye"],
                ["REye", "REar"], ["Nose", "LEye"], ["LEye", "LEar"] ]
 
-net = cv.dnn.readNetFromTensorflow("graph_opt.pb")
-img = cv.imread("pose.png")
-plt.imshow(cv.cvtColor(img,cv.COLOR_BGR2RGB))
+net = cv.dnn.readNetFromTensorflow("skeleton-py/graph_opt.pb")
+img = cv.imread("skeleton-py/pose.png")
 
 def pose_estimation(frame):
     frameWidth = frame.shape[1]
@@ -44,29 +43,15 @@ def pose_estimation(frame):
         # Add a point if it's confidence is higher than threshold.
         points.append((int(x), int(y)) if conf > thr else None)
 
-    for pair in POSE_PAIRS:
-        partFrom = pair[0]
-        partTo = pair[1]
-        assert(partFrom in BODY_PARTS)
-        assert(partTo in BODY_PARTS)
-
-        idFrom = BODY_PARTS[partFrom]
-        idTo = BODY_PARTS[partTo]
-
-        if points[idFrom] and points[idTo]:
-            cv.line(frame, points[idFrom], points[idTo], (0, 255, 0), 3)
-            cv.ellipse(frame, points[idFrom], (3, 3), 0, 0, 360, (0, 0, 255), cv.FILLED)
-            cv.ellipse(frame, points[idTo], (3, 3), 0, 0, 360, (0, 0, 255), cv.FILLED)
-
     t, _ = net.getPerfProfile()
     freq = cv.getTickFrequency() / 1000
     idPoints = {}
     i = 0
     for p in points:
-        idPoints.update({i: p})
+        if i < 18:
+            idPoints.update({BODY_PARTS[i]: p})
         i = i+1
-    print(idPoints)
+
+    print(json.dumps(idPoints))
     return frame
 est_image = pose_estimation(img)
-plt.imshow(cv.cvtColor(est_image,cv.COLOR_BGR2RGB))
-plt.waitforbuttonpress(1000)
