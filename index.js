@@ -2,13 +2,19 @@ import express from 'express'
 import bodyParser from "body-parser";
 import cors from 'cors'
 import * as dotenv from 'dotenv'
-import fs from 'fs'
-import child_process from "child_process";
+import { WebSocketServer } from 'ws';
 dotenv.config()
 
-const spawn = child_process.spawn
 const app = express()
 const port = process.env.port
+
+const wss = new WebSocketServer({ port: 8080 });
+
+wss.on('connection', function connection(ws) {
+    ws.on('message', function message(data) {
+        console.log(JSON.parse(data));
+    });
+});
 
 app.use(cors())
 
@@ -18,29 +24,54 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
-function writeFile(img) {
-    return new Promise((resolve) => {
-        fs.writeFile('skeleton-py/pose.png', img, {encoding: 'base64'}, function(err) {
-            resolve()
-        })
-    })
+var rightHandUp = false
+var leftHandUp = false
+
+function rightHandHandler(body) {
+    for(let i=0; i< body.length;i++) {
+        if(rightHandUp) {
+            if(body[i].rightShoulder.y > body[i].rightElbow.y
+                || body[i].rightShoulder.y > body[i].rightWrist.y) {
+                rightHandUp = false
+                console.log("Right hand down i:"+i)
+            }
+        }
+        else {
+            if(body[i].rightShoulder.y < body[i].rightElbow.y
+                && body[i].rightShoulder.y < body[i].rightWrist.y) {
+                rightHandUp = true
+                console.log("Right hand up i:"+i)
+            }
+        }
+    }
 }
 
-function getSkeleton() {
-    return new Promise((resolve) => {
-        const process = spawn('python',["skeleton-py/skeleton.py"])
-        process.stdout.on('data',function(data) {
-            const ans = JSON.parse(data.toString())
-            resolve(ans)
-        })
-    })
+function leftHandHandler(body) {
+    for(let i=0; i< body.length;i++) {
+        if(leftHandUp) {
+            if(body[i].leftShoulder.y > body[i].leftElbow.y
+                || body[i].leftShoulder.y > body[i].leftWrist.y) {
+                leftHandUp = false
+                console.log("left hand down i:"+i)
+            }
+        }
+        else {
+            if(body[i].leftShoulder.y < body[i].leftElbow.y
+                && body[i].leftShoulder.y < body[i].leftWrist.y) {
+                leftHandUp = true
+                console.log("left hand up i:"+i)
+            }
+        }
+    }
 }
 
 app.post('/image', async (req, res) => {
-    const img = req.body.image.split(';base64,').pop();
-    await writeFile(img)
-    const ans = await getSkeleton()
-    res.json(JSON.stringify(ans))
+    // console.log(req.body)
+    // rightHandUp = false
+    // leftHandUp = false
+    // rightHandHandler(req.body)
+    // leftHandHandler(req.body)
+    res.json({leftHandUp, rightHandUp})
 })
 
 app.listen(port, () => {
