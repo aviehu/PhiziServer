@@ -3,6 +3,8 @@ import bodyParser from "body-parser";
 import cors from 'cors'
 import * as dotenv from 'dotenv'
 import { WebSocketServer } from 'ws';
+import {writeJsonFile} from 'write-json-file';
+
 dotenv.config()
 
 const app = express()
@@ -10,9 +12,12 @@ const port = process.env.port
 
 const wss = new WebSocketServer({ port: 8080 });
 
+const recording = []
+
 wss.on('connection', function connection(ws) {
     ws.on('message', function message(data) {
-        console.log(JSON.parse(data));
+        const poseJson = JSON.parse(data)
+        recording.push(poseJson)
     });
 });
 
@@ -66,12 +71,9 @@ function leftHandHandler(body) {
 }
 
 app.post('/image', async (req, res) => {
-    // console.log(req.body)
-    // rightHandUp = false
-    // leftHandUp = false
-    // rightHandHandler(req.body)
-    // leftHandHandler(req.body)
-    res.json({leftHandUp, rightHandUp})
+    await writeJsonFile('foo.json', recording);
+    recording.length = 0
+    res.json({ ok: 1 })
 })
 
 app.listen(port, () => {
