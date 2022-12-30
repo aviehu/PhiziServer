@@ -4,6 +4,7 @@ import cors from 'cors'
 import * as dotenv from 'dotenv'
 import { WebSocketServer } from 'ws';
 import {writeJsonFile} from 'write-json-file';
+import { angles } from './angles.js';
 
 dotenv.config()
 
@@ -71,6 +72,12 @@ function leftHandHandler(body) {
 }
 
 app.post('/image', async (req, res) => {
+    console.log(req.body)
+    for(let i = 0 ; i < 10 ; i++){
+        var angle = angles(req.body[i])
+        console.log("angle: " + angle)
+    }
+    
     await writeJsonFile('foo.json', recording);
     recording.length = 0
     res.json({ ok: 1 })
