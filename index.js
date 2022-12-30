@@ -73,10 +73,7 @@ function leftHandHandler(body) {
 
 app.post('/image', async (req, res) => {
     console.log(req.body)
-    for(let i = 0 ; i < 10 ; i++){
-        var angle = angles(req.body[i])
-        console.log("angle: " + angle)
-    }
+     angles(req.body[0])
     
     await writeJsonFile('foo.json', recording);
     recording.length = 0
