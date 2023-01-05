@@ -1,7 +1,7 @@
 import math
 from multiprocessing import Process, Queue
 from queue import Empty
-
+from matplotlib.patches import Arc
 import matplotlib.pyplot as plt
 from matplotlib import animation
 import json
@@ -44,6 +44,18 @@ def get_values(pose):
 def plot(q):
     fig = plt.figure()
     ax = plt.axes(projection='3d')
+    fig.set_size_inches(10, 10, forward=True)
+
+    def draw_length(length_obj, p1, p2):
+        start_x, start_y, start_z = p1
+        end_x, end_y, end_z = p2
+        if len(length_obj) > 0:
+            ax.text((start_x + end_x) / 2, (start_y + end_y) / 2, (start_z + end_z) / 2,
+                    round(length_obj[0]['length'], 2))
+
+    def draw_angles(angle, p1):
+        x, y, z = p1
+        ax.text(x, y, z, round(angle, 2))
 
     def animate_func(i):
         next_frame = q.get()
@@ -53,13 +65,21 @@ def plot(q):
         ax.set_xlim3d([-1, 1])
         ax.set_ylim3d([-1, 1])
         ax.set_zlim3d([-1, 1])
+        # print(next_frame['posAngles'])
         for pair in POSE_PAIRS:
-            start_x, start_y, start_z = get_part(next_frame, pair[0])
-            end_x, end_y, end_z = get_part(next_frame, pair[1])
+            p1 = get_part(next_frame, pair[0])
+            start_x, start_y, start_z = p1
+            p2 = get_part(next_frame, pair[1])
+            end_x, end_y, end_z = p2
             if start_x >= -1 and end_x >= -1:
                 ax.plot3D([start_x, end_x], [start_y, end_y], [start_z, end_z], c='blue')
+                # length_obj = [x for x in next_frame['partsLengths'] if x['from'] == pair[0] and x['to'] == pair[1]]
+                # draw_length(length_obj, p1, p2)
+        for angle_obj in next_frame['posAngles']:
+            draw_angles(angle_obj['angle'], get_part(next_frame, angle_obj['name']))
 
     ani = animation.FuncAnimation(fig, animate_func, interval=10, frames=1)
+    q.get()
     plt.show()
 
 
