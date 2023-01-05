@@ -4,7 +4,7 @@
 import fs from 'fs'
 
 var anglesJson = {
-    table:[]
+    angles:[]
 };
 
 function dist(p1, p2) {
@@ -33,7 +33,7 @@ function calculate_angle(name,points){
     console.log("in calc");
     const angle = find_angle(points[0],points[1],points[2]);
     console.log("angle = "+angle);
-    anglesJson.table.push({name: name ,angle: angle});
+    anglesJson.angles.push({name: name ,angle: angle});
 
 }
 
@@ -41,28 +41,14 @@ export function angles(body){
     var anglesMap = new Map();
    
 
-    var left_shoulder = null
-    var left_elbow = null
-    var left_wrist = null
-    var left_hip = null
-    var left_knee = null
-    var left_ankle = null
-
-    var right_shoulder = null
-    var right_elbow = null
-    var right_wrist = null
-    var right_hip = null
-    var right_knee = null
-    var right_ankle = null
-
-    anglesMap.set('leftElbow',[left_wrist,left_elbow,left_shoulder])
+    var left_shoulder = null, left_elbow = null, left_wrist = null, left_hip = null, left_knee = null, left_ankle = null, right_shoulder = null, right_elbow = null, right_wrist = null, right_hip = null, right_knee = null, right_ankle = null
 
         for (let j in body){
             let item = body[j]
             
             switch(item.part){
                 case 'left_shoulder':
-                    console.log("left shiulder")
+                    console.log("left shoulder")
                     left_shoulder = [item.x,item.y,item.z];
                     break;
                 case 'left_elbow':
@@ -105,7 +91,15 @@ export function angles(body){
             }
         }
         anglesMap.set('leftElbow',[left_wrist,left_elbow,left_shoulder])
+        anglesMap.set('rightElbow',[right_wrist,right_elbow,right_shoulder])
+        anglesMap.set('leftShoulder',[left_elbow,left_shoulder,left_hip])
+        anglesMap.set('rightShoulder',[right_elbow,right_shoulder,right_hip])
+        anglesMap.set('leftHip',[left_shoulder,left_hip,left_knee])
+        anglesMap.set('rightHip',[right_shoulder,right_hip,right_knee])
+        anglesMap.set('leftKnee',[left_hip,left_knee,left_ankle])
+        anglesMap.set('righKnee',[right_hip,right_knee,right_ankle])
         console.log(anglesMap)
+
         for (const i of anglesMap.keys()){
             console.log("calculate");
             calculate_angle(i,anglesMap.get(i))
@@ -116,8 +110,6 @@ export function angles(body){
               console.log(err);
             else {
               console.log("File written successfully\n");
-              console.log("The written has the following contents:");
-            //   console.log(fs.readFileSync("b.txt", "utf8"));
             }});
 
         
