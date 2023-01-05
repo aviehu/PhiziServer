@@ -1,3 +1,4 @@
+import math
 from multiprocessing import Process, Queue
 from queue import Empty
 
@@ -27,7 +28,7 @@ def get_part(pose, part_name):
     for point in pose['pose']:
         if point['part'] == part_name:
             return point['x'], point['y'], point['z']
-    return -1, -1, -1
+    return -5, -5, -5
 
 
 def get_values(pose):
@@ -40,31 +41,22 @@ def get_values(pose):
         zs.append(point['z'])
     return xs, ys, zs
 
-
-def normalize_pose(pose, u):
-    for point in pose['pose']:
-        point['z'] = point['z'] * u + 125
-        print(point['z'])
-
-
-def plot(q, U):
+def plot(q):
     fig = plt.figure()
     ax = plt.axes(projection='3d')
-    u = U.get()
 
     def animate_func(i):
         next_frame = q.get()
-        normalize_pose(next_frame, u)
         xs, ys, zs = get_values(next_frame)
         ax.clear()
         ax.scatter(xs, ys, zs)
-        ax.set_xlim3d([0, 250])
-        ax.set_ylim3d([0, 187])
-        ax.set_zlim3d([0, 250])
+        ax.set_xlim3d([-1, 1])
+        ax.set_ylim3d([-1, 1])
+        ax.set_zlim3d([-1, 1])
         for pair in POSE_PAIRS:
             start_x, start_y, start_z = get_part(next_frame, pair[0])
             end_x, end_y, end_z = get_part(next_frame, pair[1])
-            if start_x >= 0 and end_x >= 0:
+            if start_x >= -1 and end_x >= -1:
                 ax.plot3D([start_x, end_x], [start_y, end_y], [start_z, end_z], c='blue')
 
     ani = animation.FuncAnimation(fig, animate_func, interval=10, frames=1)
@@ -86,8 +78,6 @@ def echo_wrapper(q):
             msg = json.loads(message)
             if len(msg['pose']) > 0:
                 q.put(json.loads(message))
-            else:
-                U.put(msg['U'])
     return echo
 
 
@@ -99,8 +89,7 @@ async def main():
 
 if __name__ == '__main__':
     q = Queue()
-    U = Queue()
-    p = Process(target=plot, args=(q,U))
+    p = Process(target=plot, args=(q,))
     p.start()
     asyncio.run(main())
 
