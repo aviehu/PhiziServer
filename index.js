@@ -4,7 +4,6 @@ import cors from 'cors'
 import * as dotenv from 'dotenv'
 import { WebSocketServer } from 'ws';
 import {writeJsonFile} from 'write-json-file';
-
 dotenv.config()
 
 const app = express()
