@@ -1,10 +1,10 @@
+import * as dotenv from 'dotenv'
+dotenv.config()
 import express from 'express'
 import bodyParser from "body-parser";
 import cors from 'cors'
-import * as dotenv from 'dotenv'
 import { WebSocketServer } from 'ws';
-import {writeJsonFile} from 'write-json-file';
-dotenv.config()
+import dataHandler from "./dataPersistance/dataHandler.js";
 
 const app = express()
 const port = process.env.port
@@ -24,55 +24,22 @@ app.use(cors())
 
 app.use(bodyParser.json())
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
+
+app.post("/login", async (req, res) => {
+    const { body } = req
+    const result = await dataHandler.getUser(body)
+    if(result) {
+        res.send({error: null})
+        return
+    }
+    res.status(401).send({error: "Wrong Email or Password"})
 })
 
-var rightHandUp = false
-var leftHandUp = false
 
-function rightHandHandler(body) {
-    for(let i=0; i< body.length;i++) {
-        if(rightHandUp) {
-            if(body[i].rightShoulder.y > body[i].rightElbow.y
-                || body[i].rightShoulder.y > body[i].rightWrist.y) {
-                rightHandUp = false
-                console.log("Right hand down i:"+i)
-            }
-        }
-        else {
-            if(body[i].rightShoulder.y < body[i].rightElbow.y
-                && body[i].rightShoulder.y < body[i].rightWrist.y) {
-                rightHandUp = true
-                console.log("Right hand up i:"+i)
-            }
-        }
-    }
-}
-
-function leftHandHandler(body) {
-    for(let i=0; i< body.length;i++) {
-        if(leftHandUp) {
-            if(body[i].leftShoulder.y > body[i].leftElbow.y
-                || body[i].leftShoulder.y > body[i].leftWrist.y) {
-                leftHandUp = false
-                console.log("left hand down i:"+i)
-            }
-        }
-        else {
-            if(body[i].leftShoulder.y < body[i].leftElbow.y
-                && body[i].leftShoulder.y < body[i].leftWrist.y) {
-                leftHandUp = true
-                console.log("left hand up i:"+i)
-            }
-        }
-    }
-}
-
-app.post('/image', async (req, res) => {
-    await writeJsonFile('foo.json', recording);
-    recording.length = 0
-    res.json({ ok: 1 })
+app.post("/register", async (req, res) => {
+    const { body } = req
+    await dataHandler.addUser(body)
+    res.send({error: null})
 })
 
 app.listen(port, () => {
