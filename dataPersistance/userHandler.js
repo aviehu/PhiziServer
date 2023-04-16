@@ -6,6 +6,8 @@ const userSchema = {
     "properties": {
         "email": {"type": "string"},
         "password": {"type": "string"},
+        "age": {"type": "number"},
+        "height": {"type": "number"}
     },
 }
 
