@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import cors from 'cors'
 import { WebSocketServer } from 'ws';
 import dataHandler from "./dataPersistance/dataHandler.js";
+import * as fs from "fs";
 
 const app = express()
 const port = process.env.port
@@ -24,6 +25,15 @@ app.use(cors())
 
 app.use(bodyParser.json())
 
+app.post("/pose", async (req, res) => {
+    const { body } = req
+    const result = await dataHandler.addPose(body)
+    if(result) {
+        res.send({error: null})
+        return
+    }
+    res.status(502).send({error: "Something went wrong"})
+})
 
 app.post("/login", async (req, res) => {
     const { body } = req

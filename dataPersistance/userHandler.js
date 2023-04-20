@@ -20,7 +20,6 @@ export default function userHandler(dataBase) {
 
     UserHandler.getUser = async function (user) {
         const result = await users.findOne(user)
-        console.log(result)
         return result
     }
 
