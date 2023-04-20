@@ -17,4 +17,9 @@ dataHandler.getUser = async function getUser(user) {
     return await UserHandler.getUser(user)
 }
 
+dataHandler.getAllUsers = async function getAllUser() {
+    console.log("datahandler")
+    return await UserHandler.getAllUser()
+}
+
 export default dataHandler
