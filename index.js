@@ -39,6 +39,7 @@ app.post("/pose", async (req, res) => {
         res.send({error: null})
         return
     }
+
     res.status(502).send({error: "Something went wrong"})
 })
 
