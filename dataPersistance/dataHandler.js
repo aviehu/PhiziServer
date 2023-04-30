@@ -20,6 +20,11 @@ dataHandler.getUser = async function getUser(user) {
     return await UserHandler.getUser(user)
 }
 
+dataHandler.getAllUsers = async function getAllUser() {
+    console.log("datahandler")
+    return await UserHandler.getAllUser()
+}
+
 dataHandler.addPose = async function addPose(pose) {
     return await PoseHandler.addPose(pose)
 }
