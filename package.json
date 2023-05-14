@@ -1,35 +1,31 @@
 {
-  "name": "phiziserver",
+  "name": "PhiziServer",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "start": "node index.js"
+    "test": "NODE_ENV=test jest",
+    "start": "node src/server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/aviehu/PhiziServer.git"
-  },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/aviehu/PhiziServer/issues"
-  },
-  "homepage": "https://github.com/aviehu/PhiziServer#readme",
   "dependencies": {
-    "body-parser": "^1.20.1",
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "fs": "^0.0.1-security",
-    "jsonschema": "^1.4.1",
-    "mongodb": "^5.1.0",
-    "write-json-file": "^5.0.0",
-    "ws": "^8.11.0"
+    "express-validator": "^7.0.1",
+    "http-status-codes": "^2.2.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.1.0",
+    "shortid": "^2.2.16"
   },
-  "type": "module",
   "devDependencies": {
-    "jest": "^29.5.0"
+    "jest": "^29.5.0",
+    "mongodb-memory-server": "^8.12.2",
+    "supertest": "^6.3.3"
   }
 }
