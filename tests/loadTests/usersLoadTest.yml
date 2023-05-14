@@ -1,0 +1,31 @@
+config:
+  target: "http://localhost:3001/api"
+  phases:
+    - duration: 10
+      arrivalRate: 15
+  defaults:
+    headers:
+      content-type: "application/json"
+scenarios:
+  - name: "Login"
+    flow:
+      - post:
+          url: "/login"
+          json:
+            email: "test@test.com"
+            password: "testpassword"
+      - get:
+          url: "/getUser/test@test.com"
+  - name: "Register"
+    flow:
+      - post:
+          url: "/register"
+          json:
+            email: "test2@test.com"
+            password: "testpassword"
+      - get:
+          url: "/getAllUsers"
+  - name: "Get All Users"
+    flow:
+      - get:
+          url: "/getAllUsers"

@@ -79,24 +79,16 @@ describe('User controller', () => {
             })
             await user.save();
 
-            const res = await request(app)
-                .post(`/api/getUser`)
-                .send({
-                    email: 'test@example.com',
-                });
-            expect(res.statusCode).toEqual(StatusCodes.OK);
+            const res = await request(app).get(`/api/getUser/test@example.com`)
+
+            expect(res.statusCode).toEqual(StatusCodes.OK)
             expect(res.body.email).toEqual('test@example.com');
         });
 
         it('should return a 404 error if user is not found', async () => {
-            const user = {
-                email: 'test@example.com',
-                password: 'passwordX',
-            };
             const res = await request(app)
-                .post('/api/getUser')
-                .send(user);
-            expect(res.statusCode).toEqual(StatusCodes.BAD_REQUEST);
+                .get('/api/getUser/test@example.com')
+            expect(res.status).toEqual(StatusCodes.BAD_REQUEST);
             expect(res.body.error).toBeDefined();
         });
     });
@@ -129,9 +121,8 @@ describe('User controller', () => {
 
             const res = await request(app)
                 .get('/api/getAllUsers')
-                .send();
 
-            expect(res.statusCode).toEqual(200);
+            expect(res.status).toEqual(200);
             expect(res.body.length).toEqual(2);
             expect(res.body[0].email).toEqual('test1@example.com');
             expect(res.body[1].email).toEqual('test2@example.com');

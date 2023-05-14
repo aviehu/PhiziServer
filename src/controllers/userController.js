@@ -20,6 +20,7 @@ exports.login = async (req, res) => {
         }
         const isMatch = await user.checkPassword(password);
         if (!isMatch) {
+
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Authentication failed' });
         }
         const token = jwt.sign({ email: user.email }, JWTSECRET);
@@ -41,7 +42,7 @@ exports.register = async (req, res) => {
 
 exports.getUser = async (req, res) => {
     try {
-        const user = await User.findOne(req.body);
+        const user = await User.findOne({email: req.params.email});
         if (!user) {
             return res.status(StatusCodes.BAD_REQUEST).json({ error: 'User not found' });
         }

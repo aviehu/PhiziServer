@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_ENV=test jest",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "teststart": "NODE_ENV=test node src/server.js",
+    "loadTest": "artillery run tests/loadTests/sessionLoadTest.yml"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "artillery": "^2.0.0-32",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",

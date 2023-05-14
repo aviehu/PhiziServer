@@ -5,9 +5,9 @@ const sessionController = require('../controllers/sessionController');
 
 const router = express.Router();
 
-router.post('/sessions/getSession', sessionController.getSession);
+router.get('/sessions/getSession/:name', sessionController.getSession);
 router.post('/sessions/addSession', sessionController.addSession);
-router.post('/sessions/deleteSession', sessionController.deleteSession);
+router.delete('/sessions/deleteSession/:name', sessionController.deleteSession);
 router.post('/sessions/updateSession', sessionController.updateSession);
 router.get('/sessions/getAllSessions', sessionController.getAllSessions);
 

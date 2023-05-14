@@ -1,0 +1,93 @@
+config:
+  target: "http://localhost:3001/api"
+  phases:
+    - duration: 10
+      arrivalRate: 20
+  defaults:
+    headers:
+      Content-Type: "application/json"
+
+scenarios:
+  - name: "Get Session"
+    flow:
+      - get:
+          url: "/sessions/getSession/Session1"
+  - name: "Add Session"
+    flow:
+      - post:
+          url: "/sessions/addSession"
+          json:
+            name: "NewSession"
+            description: "New session description"
+            difficulty: 5
+            poses: [
+              {
+                keypoints: [
+                  {
+                    part: "nose",
+                    x: 0.5,
+                    y: 0.5,
+                    z: 0.5
+                  },
+                  {
+                    part: "leftEye",
+                    x: 0.4,
+                    y: 0.5,
+                    z: 0.5
+                  },
+                  {
+                    part: "rightEye",
+                    x: 0.6,
+                    y: 0.5,
+                    z: 0.5
+                  }
+                  # add more keypoints here
+                ]
+              }
+              # add more poses here
+            ]
+      - log: "Added new session with id {{JSON.parse(response.body)._id}}"
+  - name: "Delete Session"
+    flow:
+      - delete:
+          url: "/sessions/deleteSession/NewSession"
+      - log: "Deleted session"
+  - name: "Update Session"
+    flow:
+      - post:
+          url: "/sessions/updateSession"
+          json:
+            name: "Session1"
+            description: "Updated session description"
+            difficulty: 8
+            poses: [
+              {
+                keypoints: [
+                  {
+                    part: "nose",
+                    x: 0.6,
+                    y: 0.5,
+                    z: 0.5
+                  },
+                  {
+                    part: "leftEye",
+                    x: 0.5,
+                    y: 0.5,
+                    z: 0.5
+                  },
+                  {
+                    part: "rightEye",
+                    x: 0.7,
+                    y: 0.5,
+                    z: 0.5
+                  }
+                  # add more keypoints here
+                ]
+              }
+              # add more poses here
+            ]
+      - log: "Updated session with id {{JSON.parse(response.body)._id}}"
+  - name: "Get All Sessions"
+    flow:
+      - get:
+          url: "/sessions/getAllSessions"
