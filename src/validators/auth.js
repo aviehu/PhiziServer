@@ -6,14 +6,14 @@ const validateSignUpRequest = [
     check("email").isEmail().withMessage("Valid Email required"),
     check("name").notEmpty().withMessage("Name is required"),
     check("password")
-        .isLength({ min: 6 })
-        .withMessage("Password must be at least 6 character long"),
+        .isLength({ min: 3 })
+        .withMessage("Password must be at least 3 character long"),
 ];
 const validateSignInRequest = [
     check("email").isEmail().withMessage("Valid Email required"),
     check("password")
-        .isLength({ min: 6 })
-        .withMessage("Password must be at least 6 character long"),
+        .isLength({ min: 3 })
+        .withMessage("Password must be at least 3 character long"),
 ]
 const isRequestValidated = (req, res, next) => {
     const errors = validationResult(req);

@@ -11,8 +11,8 @@ const app = express();
 app.use(cors())
 
 app.use(bodyParser.json());
-app.use('/api/pose', poseRoutes)
-app.use('/api', userRoutes);
-app.use('/api', sessionRoutes);
+app.use('/api/poses', poseRoutes)
+app.use('/api/users', userRoutes);
+app.use('/api/session', sessionRoutes);
 
 module.exports = app;

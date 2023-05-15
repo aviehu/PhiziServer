@@ -52,7 +52,7 @@ exports.updateSession = async (req, res) => {
                     poses: req.body.poses
                 }
             },
-            { new: true }
+            { returnOriginal: false }
         );
         if (!session) {
             return res.status(StatusCodes.NOT_FOUND).json({ error: `Session does not exist: ${req.params.name}` });

@@ -7,7 +7,6 @@ const { connectDB, disconnectDB } = require('../../src/database');
 const { StatusCodes } = require("http-status-codes");
 const jwt = require("jsonwebtoken");
 require('dotenv').config()
-const JWTSECRET = process.env.JWTSECRET
 
 
 beforeAll(async () => {
@@ -24,7 +23,7 @@ afterAll(async () => {
 });
 
 describe('User controller', () => {
-    describe('POST /api/users', () => {
+    describe('POST /api/users/register', () => {
         it('should create a new user', async () => {
             const userData = {
                 name: 'test',
@@ -37,7 +36,7 @@ describe('User controller', () => {
                 goals: ['lose weight', 'build muscle'],
             }
             const res = await request(app)
-                .post('/api/register')
+                .post('/api/users/register')
                 .send(userData);
 
             expect(res.statusCode).toEqual(StatusCodes.CREATED);
@@ -49,7 +48,7 @@ describe('User controller', () => {
 
         it('should return an error if email is missing', async () => {
             const res = await request(app)
-                .post('/api/login')
+                .post('/api/users/login')
                 .send({
                     name: 'test',
                     password: 'password',
@@ -63,6 +62,33 @@ describe('User controller', () => {
             expect(res.statusCode).toEqual(StatusCodes.BAD_REQUEST);
             expect(res.body.error).toBeDefined();
         });
+    });
+
+    describe('POST /api/users/updateUser', () => {
+        it('should update a user by email', async () => {
+            const user = new User({
+                name: 'test',
+                email: 'test@example.com',
+                password: 'password',
+                age: 30,
+                weight: 70,
+                height: 170,
+                bmi: 24.2,
+                goals: ['lose weight', 'build muscle'],
+            })
+            await user.save();
+
+            const res = await request(app)
+                .post(`/api/users/updateUser`)
+                .send({
+                    name: 'New test',
+                    email: 'test@example.com',
+                })
+
+            expect(res.statusCode).toEqual(StatusCodes.OK)
+            expect(res.body.name).toEqual('New test');
+        });
+
     });
 
     describe('GET /api/users/getUser', () => {
@@ -79,7 +105,7 @@ describe('User controller', () => {
             })
             await user.save();
 
-            const res = await request(app).get(`/api/getUser/test@example.com`)
+            const res = await request(app).get(`/api/users/getUser/test@example.com`)
 
             expect(res.statusCode).toEqual(StatusCodes.OK)
             expect(res.body.email).toEqual('test@example.com');
@@ -87,13 +113,13 @@ describe('User controller', () => {
 
         it('should return a 404 error if user is not found', async () => {
             const res = await request(app)
-                .get('/api/getUser/test@example.com')
+                .get('/api/users/getUser/test@example.com')
             expect(res.status).toEqual(StatusCodes.BAD_REQUEST);
             expect(res.body.error).toBeDefined();
         });
     });
 
-    describe('GET /api/users', () => {
+    describe('GET /api/users/getAllUsers', () => {
         it('should return all users', async () => {
             const user1 = new User({
                 name: 'test1',
@@ -120,7 +146,7 @@ describe('User controller', () => {
             await user2.save();
 
             const res = await request(app)
-                .get('/api/getAllUsers')
+                .get('/api/users/getAllUsers')
 
             expect(res.status).toEqual(200);
             expect(res.body.length).toEqual(2);

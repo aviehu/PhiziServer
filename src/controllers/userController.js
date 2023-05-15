@@ -59,3 +59,29 @@ exports.getAllUsers = async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
     }
 };
+
+exports.updateUser = async (req, res) => {
+    try {
+        const session = await User.findOneAndUpdate(
+            { email: req.body.email },
+            {
+                $set: {
+                    name: req.body.name,
+                    password:  req.body.password,
+                    age: req.body.age,
+                    weight: req.body.weight,
+                    height: req.body.height,
+                    bmi: req.body.bmi,
+                    goals: req.body.goals,
+                }
+            },
+            { returnOriginal: false }
+        );
+        if (!session) {
+            return res.status(StatusCodes.NOT_FOUND).json({ error: `Session does not exist: ${req.params.name}` });
+        }
+        res.status(StatusCodes.OK).json(session);
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    }
+}
