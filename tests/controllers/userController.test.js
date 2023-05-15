@@ -5,8 +5,6 @@ const app = require('../../src/app');
 const User = require('../../src/models/userModel');
 const { connectDB, disconnectDB } = require('../../src/database');
 const { StatusCodes } = require("http-status-codes");
-const jwt = require("jsonwebtoken");
-require('dotenv').config()
 
 
 beforeAll(async () => {
