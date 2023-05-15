@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/getSession/:name', sessionController.getSession);
 router.post('/addSession', sessionController.addSession);
-router.delete('/deleteSession/:name', sessionController.deleteSession);
+router.delete('/deleteSession/:id', sessionController.deleteSession);
 router.post('/updateSession', sessionController.updateSession);
 router.get('/getAllSessions', sessionController.getAllSessions);
 

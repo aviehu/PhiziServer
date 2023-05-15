@@ -13,6 +13,6 @@ app.use(cors())
 app.use(bodyParser.json());
 app.use('/api/poses', poseRoutes)
 app.use('/api/users', userRoutes);
-app.use('/api/session', sessionRoutes);
+app.use('/api/sessions', sessionRoutes);
 
 module.exports = app;
