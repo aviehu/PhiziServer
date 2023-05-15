@@ -11,7 +11,8 @@ const part = new mongoose.Schema({
 const pose = new mongoose.Schema( {
     name: {type: String, required: true, key: true},
     goals: {type: [String], default: []},
-    keypoints: {type: [part] , validate: [(val) => val.length <= 33, 'Must have at most 33 keypoints']}
+    keypoints: {type: [part] , validate: [(val) => val.length <= 33, 'Must have at most 33 keypoints']},
+    keypoints3D: {type: [part] , validate: [(val) => val.length <= 33, 'Must have at most 33 keypoints']}
 })
 
 const Pose = mongoose.model('Pose', pose);

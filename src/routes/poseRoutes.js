@@ -3,11 +3,12 @@ const poseController = require('../controllers/poseController');
 
 const router = express.Router();
 
-router.get('/poses/getPose/:name', poseController.getPose);
-router.post('/poses/addPose', poseController.addPose);
-router.delete('/poses/deletePose/:name', poseController.deletePose);
-router.post('/poses/updatePose', poseController.updatePose);
-router.get('/poses/getAllposes', poseController.getAllPoses);
+router.get('/getPose/:name', poseController.getPose);
+router.post('/addPose', poseController.addPose);
+router.delete('/deletePose/:name', poseController.deletePose);
+router.post('/updatePose', poseController.updatePose);
+router.get('/getAllposes', poseController.getAllPoses);
+router.post('/getPosesByGoals', poseController.getPosesByGoals)
 
 
 module.exports = router;

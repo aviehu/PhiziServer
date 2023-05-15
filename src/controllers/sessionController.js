@@ -1,6 +1,7 @@
 // src/controllers/pose.controller.js
 const { StatusCodes } = require("http-status-codes");
 const Session = require('../models/sessionModel');
+const Poses = require('../models/poseModel')
 
 exports.getSession = async (req, res) => {
     try {
@@ -28,12 +29,7 @@ exports.deleteSession = async (req, res) => {
 
 exports.addSession = async (req, res) => {
     try {
-        const session = new Session({
-            name: req.body.name,
-            description: req.body.description,
-            difficulty: req.body.difficulty,
-            poses: req.body.poses
-        });
+        const session = new Session(req.body);
         await session.save();
         res.status(StatusCodes.CREATED).json(session);
     } catch (error) {
@@ -71,3 +67,14 @@ exports.getAllSessions = async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
     }
 };
+
+exports.getSessionForUser = async (req, res) => {
+    try {
+        const { body } = req
+        const session = await Session.findOne({goals: { $in: body.goals }})
+        const sessionPoses = await Poses.find({name: { $in: session.poses }})
+        res.status(StatusCodes.OK).json({session, sessionPoses});
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    }
+}

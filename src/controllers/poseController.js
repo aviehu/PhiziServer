@@ -28,11 +28,7 @@ exports.deletePose = async (req, res) => {
 
 exports.addPose = async (req, res) => {
     try {
-        const pose = new Pose({
-            name: req.body.name,
-            goals: req.body.goals,
-            keypoints: req.body.keypoints,
-        });
+        const pose = new Pose(req.body);
         await pose.save();
         res.status(StatusCodes.CREATED).json(pose);
     } catch (error) {
@@ -64,6 +60,15 @@ exports.updatePose = async (req, res) => {
 exports.getAllPoses = async (req, res) => {
     try {
         const poses = await Pose.find();
+        res.status(StatusCodes.OK).json(poses);
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    }
+};
+
+exports.getPosesByGoals = async (req, res) => {
+    try {
+        const poses = await Pose.find(req.body);
         res.status(StatusCodes.OK).json(poses);
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
