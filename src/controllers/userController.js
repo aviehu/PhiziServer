@@ -20,7 +20,6 @@ exports.login = async (req, res) => {
         }
         const isMatch = await user.checkPassword(password);
         if (!isMatch) {
-
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Authentication failed' });
         }
         const token = jwt.sign({ email: user.email }, JWTSECRET);
