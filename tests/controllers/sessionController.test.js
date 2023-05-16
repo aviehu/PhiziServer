@@ -25,17 +25,19 @@ afterAll(async () => {
 describe('Session controller', () => {
     describe('POST /api/sessions/addSession', () => {
         it('should create a new session', async () => {
-            const poseData = new Pose({
+            const pose = new Pose({
                 name: 'Pose Test',
                 goals: ['SHOULDERS'],
-                keypoints: []
+                keypoints: [],
+                keypoints3D: []
             })
-            await poseData.save()
+            await pose.save()
             const sessionData = {
                 name: 'test session',
                 description: "Test description",
                 difficulty: 5,
-                poses: ['Pose Test']
+                poses: ['Pose Test'],
+                goals: ['SHOULDERS']
             }
             const res = await request(app)
                 .post('/api/sessions/addSession')
@@ -81,17 +83,19 @@ describe('Session controller', () => {
 
     describe('GET /api/sessions/getSession', () => {
         it('should return a session by name', async () => {
-            const poseData = new Pose({
+            const pose = new Pose({
                 name: 'Pose Test',
                 goals: ['SHOULDERS'],
-                keypoints: []
+                keypoints: [],
+                keypoints3D: []
             })
-            await poseData.save()
+            await pose.save()
             const session = new Session({
                 name: 'test_session',
                 description: "Test description",
                 difficulty: 5,
-                poses: ['Pose Test']
+                poses: ['Pose Test'],
+                goals: ['SHOULDERS']
             })
             await session.save();
 
@@ -111,24 +115,27 @@ describe('Session controller', () => {
 
     describe('GET /api/sessions/getAllSessions', () => {
         it('should return all sessions', async () => {
-            const poseData = new Pose({
+            const pose = new Pose({
                 name: 'Pose Test',
                 goals: ['SHOULDERS'],
-                keypoints: []
+                keypoints: [],
+                keypoints3D: []
             })
-            await poseData.save()
+            await pose.save()
             const session1 = new Session({
                 name: 'test_session1',
                 description: "Test description1",
                 difficulty: 5,
-                poses: ['Pose Test']
+                poses: ['Pose Test'],
+                goals: ['SHOULDERS']
             })
             await session1.save();
             const session2 = new Session({
                 name: 'test_session2',
                 description: "Test description2",
-                difficulty: 7,
-                poses: ['Pose Test']
+                difficulty: 6,
+                poses: ['Pose Test'],
+                goals: ['SHOULDERS']
             })
             await session2.save();
 

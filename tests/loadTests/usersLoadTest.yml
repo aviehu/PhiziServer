@@ -2,7 +2,7 @@ config:
   target: "http://localhost:3001/api"
   phases:
     - duration: 10
-      arrivalRate: 15
+      arrivalRate: 10
   defaults:
     headers:
       content-type: "application/json"
@@ -21,6 +21,7 @@ scenarios:
       - post:
           url: "/register"
           json:
+            namw: "test"
             email: "test2@test.com"
             password: "testpassword"
       - get:
