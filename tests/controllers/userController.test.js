@@ -20,19 +20,20 @@ afterAll(async () => {
     await disconnectDB();
 });
 
+const userData = {
+    name: 'test',
+    email: 'test@example.com',
+    password: 'password',
+    age: 30,
+    weight: 70,
+    height: 170,
+    bmi: 24.2,
+    goals: ['lose weight', 'build muscle'],
+}
+
 describe('User controller', () => {
     describe('POST /api/users/register', () => {
         it('should create a new user', async () => {
-            const userData = {
-                name: 'test',
-                email: 'test@example.com',
-                password: 'password',
-                age: 30,
-                weight: 70,
-                height: 170,
-                bmi: 24.2,
-                goals: ['lose weight', 'build muscle'],
-            }
             const res = await request(app)
                 .post('/api/users/register')
                 .send(userData);
@@ -64,16 +65,7 @@ describe('User controller', () => {
 
     describe('POST /api/users/updateUser', () => {
         it('should update a user by email', async () => {
-            const user = new User({
-                name: 'test',
-                email: 'test@example.com',
-                password: 'password',
-                age: 30,
-                weight: 70,
-                height: 170,
-                bmi: 24.2,
-                goals: ['lose weight', 'build muscle'],
-            })
+            const user = new User(userData)
             await user.save();
 
             const res = await request(app)
@@ -91,16 +83,7 @@ describe('User controller', () => {
 
     describe('GET /api/users/getUser', () => {
         it('should return a user by email', async () => {
-            const user = new User({
-                name: 'test',
-                email: 'test@example.com',
-                password: 'password',
-                age: 30,
-                weight: 70,
-                height: 170,
-                bmi: 24.2,
-                goals: ['lose weight', 'build muscle'],
-            })
+            const user = new User(userData)
             await user.save();
 
             const res = await request(app).get(`/api/users/getUser/test@example.com`)

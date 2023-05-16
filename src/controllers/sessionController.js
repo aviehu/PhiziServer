@@ -40,7 +40,7 @@ exports.addSession = async (req, res) => {
 exports.updateSession = async (req, res) => {
     try {
         const session = await Session.findOneAndUpdate(
-            { name: req.params.name },
+            { name: req.body.name },
             {
                 $set: {
                     description: req.body.description,
@@ -51,7 +51,7 @@ exports.updateSession = async (req, res) => {
             { returnOriginal: false }
         );
         if (!session) {
-            return res.status(StatusCodes.NOT_FOUND).json({ error: `Session does not exist: ${req.params.name}` });
+            return res.status(StatusCodes.NOT_FOUND).json({ error: `Session does not exist: ${req.body.name}` });
         }
         res.status(StatusCodes.OK).json(session);
     } catch (error) {
