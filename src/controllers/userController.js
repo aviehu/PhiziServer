@@ -1,12 +1,7 @@
 // src/controllers/user.controller.js
 const { StatusCodes } = require("http-status-codes");
 const User = require('../models/userModel');
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 require('dotenv').config()
-const JWTSECRET = process.env.JWTSECRET
-
-
 
 exports.login = async (req, res) => {
     try {
@@ -15,15 +10,10 @@ exports.login = async (req, res) => {
             throw new Error('Missing info')
         }
         const user = await User.findOne({ email });
-        if (!user) {
+        if (!user || user.password !== password) {
             return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Authentication failed' });
         }
-        const isMatch = await user.checkPassword(password);
-        if (!isMatch) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Authentication failed' });
-        }
-        const token = jwt.sign({ email: user.email }, JWTSECRET);
-        res.json({ token });
+        res.json(user);
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ error });
     }
