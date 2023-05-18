@@ -22,21 +22,27 @@ afterAll(async () => {
     await disconnectDB();
 });
 
+const poseData = {
+    name: 'Pose Test',
+    goals: ['SHOULDERS'],
+    keypoints: [],
+    keypoints3D: []
+}
+
+const sessionData = {
+    name: 'test session',
+    description: "Test description",
+    difficulty: 5,
+    poses: ['Pose Test'],
+    goals: ['SHOULDERS']
+}
+
 describe('Session controller', () => {
     describe('POST /api/sessions/addSession', () => {
         it('should create a new session', async () => {
-            const poseData = new Pose({
-                name: 'Pose Test',
-                goals: ['SHOULDERS'],
-                keypoints: []
-            })
-            await poseData.save()
-            const sessionData = {
-                name: 'test session',
-                description: "Test description",
-                difficulty: 5,
-                poses: ['Pose Test']
-            }
+            const pose = new Pose(poseData)
+            await pose.save()
+
             const res = await request(app)
                 .post('/api/sessions/addSession')
                 .send(sessionData);
@@ -50,55 +56,37 @@ describe('Session controller', () => {
 
     });
 
-    // describe('POST /api/sessions/updateSession', () => {
-    //     it('should update a session by name', async () => {
-    //         const poseData = new Pose({
-    //             name: 'Pose Test',
-    //             goals: ['SHOULDERS'],
-    //             keypoints: []
-    //         })
-    //         await poseData.save()
-    //         const session = new Session({
-    //             name: 'test session',
-    //             description: "Test description",
-    //             difficulty: 5,
-    //             poses: ['Pose Test']
-    //         })
-    //         await session.save();
-    //
-    //         const res = await request(app)
-    //             .post(`/api/sessions/updateSession`)
-    //             .send({
-    //                 name: 'test session',
-    //                 difficulty: 8,
-    //             })
-    //
-    //         expect(res.statusCode).toEqual(StatusCodes.OK)
-    //         expect(res.body.difficulty).toEqual(8);
-    //     });
-    //
-    // });
+    describe('POST /api/sessions/updateSession', () => {
+        it('should update a session by name', async () => {
+            const pose = new Pose(poseData)
+            await pose.save()
+            const session = new Session(sessionData)
+            await session.save();
+
+            const res = await request(app)
+                .post(`/api/sessions/updateSession`)
+                .send({
+                    name: 'test session',
+                    difficulty: 8,
+                })
+
+            expect(res.statusCode).toEqual(StatusCodes.OK)
+            expect(res.body.difficulty).toEqual(8);
+        });
+
+    });
 
     describe('GET /api/sessions/getSession', () => {
         it('should return a session by name', async () => {
-            const poseData = new Pose({
-                name: 'Pose Test',
-                goals: ['SHOULDERS'],
-                keypoints: []
-            })
-            await poseData.save()
-            const session = new Session({
-                name: 'test_session',
-                description: "Test description",
-                difficulty: 5,
-                poses: ['Pose Test']
-            })
+            const pose = new Pose(poseData)
+            await pose.save()
+            const session = new Session(sessionData)
             await session.save();
 
-            const res = await request(app).get(`/api/sessions/getSession/test_session`)
+            const res = await request(app).get(`/api/sessions/getSession/test session`)
 
             expect(res.statusCode).toEqual(StatusCodes.OK)
-            expect(res.body.name).toEqual('test_session');
+            expect(res.body.name).toEqual('test session');
         });
 
         // it('should return a 404 error if session is not found', async () => {
@@ -111,24 +99,22 @@ describe('Session controller', () => {
 
     describe('GET /api/sessions/getAllSessions', () => {
         it('should return all sessions', async () => {
-            const poseData = new Pose({
-                name: 'Pose Test',
-                goals: ['SHOULDERS'],
-                keypoints: []
-            })
-            await poseData.save()
+            const pose = new Pose(poseData)
+            await pose.save()
             const session1 = new Session({
                 name: 'test_session1',
                 description: "Test description1",
                 difficulty: 5,
-                poses: ['Pose Test']
+                poses: ['Pose Test'],
+                goals: ['SHOULDERS']
             })
             await session1.save();
             const session2 = new Session({
                 name: 'test_session2',
                 description: "Test description2",
-                difficulty: 7,
-                poses: ['Pose Test']
+                difficulty: 6,
+                poses: ['Pose Test'],
+                goals: ['SHOULDERS']
             })
             await session2.save();
 
