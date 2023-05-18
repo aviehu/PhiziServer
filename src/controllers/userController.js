@@ -55,15 +55,7 @@ exports.updateUser = async (req, res) => {
         const session = await User.findOneAndUpdate(
             { email: req.body.email },
             {
-                $set: {
-                    name: req.body.name,
-                    password:  req.body.password,
-                    age: req.body.age,
-                    weight: req.body.weight,
-                    height: req.body.height,
-                    bmi: req.body.bmi,
-                    goals: req.body.goals,
-                }
+                $set: req.body
             },
             { returnOriginal: false }
         );
