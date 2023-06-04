@@ -11,11 +11,11 @@ exports.login = async (req, res) => {
         }
         const user = await User.findOne({ email });
         if (!user || user.password !== password) {
-            return res.status(StatusCodes.UNAUTHORIZED).json({ message: 'Authentication failed' });
+            return res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Authentication failed' });
         }
         res.json(user);
     } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json({ error });
+        res.status(StatusCodes.BAD_REQUEST).json({ error: error });
     }
 };
 
@@ -23,9 +23,9 @@ exports.register = async (req, res) => {
     try {
         const user = new User(req.body)
         await user.save()
-        res.status(StatusCodes.CREATED).json({ message: 'User registered successfully' });
+        res.status(StatusCodes.CREATED).json({ error: 'User registered successfully' });
     } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json({ error });
+        res.status(StatusCodes.BAD_REQUEST).json({ error: error });
     }
 };
 

@@ -39,9 +39,9 @@ exports.addSession = async (req, res) => {
 
 exports.updateSession = async (req, res) => {
     try {
-        const {description, difficulty, poses, goals, name} = req.body
+        const {description, difficulty, poses, goals} = req.body
         const session = await Session.findOneAndUpdate(
-            { name },
+            { name: req.params.name },
             {
                 $set: {
                     description,

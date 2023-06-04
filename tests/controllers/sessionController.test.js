@@ -64,10 +64,9 @@ describe('Session controller', () => {
             await session.save();
 
             const res = await request(app)
-                .post(`/api/sessions/updateSession`)
+                .post(`/api/sessions/updateSession/test session`)
                 .send({
-                    name: 'test session',
-                    difficulty: 8,
+                    difficulty: 8
                 })
 
             expect(res.statusCode).toEqual(StatusCodes.OK)
