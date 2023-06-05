@@ -11,6 +11,8 @@ router.delete('/deleteSession/:id', sessionController.deleteSession);
 router.post('/updateSession/:name', sessionController.updateSession);
 router.get('/getAllSessions', sessionController.getAllSessions);
 router.post('/getSessionForUser', sessionController.getSessionForUser)
+router.post('/getAllSessionsForUser', sessionController.getAllSessionsForUser)
+router.post('/getSessionPoses', sessionController.getSessionPoses)
 
 
 module.exports = router;

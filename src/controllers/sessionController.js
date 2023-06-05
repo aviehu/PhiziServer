@@ -80,3 +80,25 @@ exports.getSessionForUser = async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
     }
 }
+
+exports.getAllSessionsForUser = async (req, res) => {
+    try {
+        const { body } = req
+        const sessions = await Session.find({goals: { $in: body.goals }})
+        res.status(StatusCodes.OK).json(sessions);
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+        
+    }
+}
+
+exports.getSessionPoses = async (req, res) => {
+    try {
+        const { body } = req
+        const session = await Session.findOne({name: body.name })
+        const sessionPoses = await Poses.find({name: { $in: session.poses }})
+        res.status(StatusCodes.OK).json({session, sessionPoses});
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    }
+}
