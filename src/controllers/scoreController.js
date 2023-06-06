@@ -28,3 +28,12 @@ exports.getUserScores = async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
     }
 };
+
+exports.getAllScores = async (req, res) => {
+    try {
+        const scores = await userSessionScore.find();
+        res.status(StatusCodes.OK).json(scores);
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    }
+};
