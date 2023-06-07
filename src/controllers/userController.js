@@ -41,6 +41,18 @@ exports.getUser = async (req, res) => {
     }
 };
 
+exports.getTherapistUsers = async (req, res) => {
+    try {
+        const users = await User.find({superior: req.body.superior, role: 'client'});
+        if (!users) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: 'No users found' });
+        }
+        res.status(StatusCodes.OK).json(users);
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    }
+};
+
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.find();
@@ -67,3 +79,15 @@ exports.updateUser = async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
     }
 }
+
+exports.deleteUser = async (req, res) => {
+    try {
+        const user = await User.findOneAndDelete({_id: req.params.id});
+        if (!user) {
+            return res.status(StatusCodes.NOT_FOUND).json({ error: `User does not exist` });
+        }
+        res.status(StatusCodes.OK).json(user);
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
+    }
+};
