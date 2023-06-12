@@ -43,7 +43,8 @@ exports.updatePose = async (req, res) => {
             {
                 $set: {
                     goals: req.body.goals,
-                    keypoints: req.body.keypoints
+                    keypoints: req.body.keypoints,
+                    keypoints3D: req.body.keypoints3D
                 }
             },
             { new: true }
@@ -68,7 +69,7 @@ exports.getAllPoses = async (req, res) => {
 
 exports.getPosesByGoals = async (req, res) => {
     try {
-        const poses = await Pose.find(req.body);
+        const poses = await Pose.find({goals: {$in: req.body}});
         res.status(StatusCodes.OK).json(poses);
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });

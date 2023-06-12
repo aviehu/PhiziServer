@@ -17,7 +17,7 @@ exports.getSession = async (req, res) => {
 
 exports.deleteSession = async (req, res) => {
     try {
-        const session = await Session.findOneAndDelete({_id: req.params.id});
+        const session = await Session.findOneAndDelete({name: req.params.name});
         if (!session) {
             return res.status(StatusCodes.NOT_FOUND).json({ error: `Session does not exist: ${req.params.name}` });
         }

@@ -21,6 +21,7 @@ afterAll(async () => {
 
 const userData = {
     name: 'test',
+    lastName: "test",
     email: 'test@example.com',
     password: 'password',
     age: 30,
@@ -49,6 +50,7 @@ describe('User controller', () => {
                 .post('/api/users/login')
                 .send({
                     name: 'test',
+                    lastName: "test1",
                     password: 'password',
                     age: 23,
                     weight: 78,
@@ -103,6 +105,7 @@ describe('User controller', () => {
         it('should return all users', async () => {
             const user1 = new User({
                 name: 'test1',
+                lastName: "test1",
                 email: 'test1@example.com',
                 password: 'password',
                 age: 30,
@@ -115,6 +118,7 @@ describe('User controller', () => {
 
             const user2 = new User({
                 name: 'test2',
+                lastName: "test2",
                 email: 'test2@example.com',
                 password: 'password',
                 age: 25,

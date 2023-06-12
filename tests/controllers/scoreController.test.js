@@ -57,6 +57,7 @@ const sessionData2 = {
 
 const userData = {
     name: 'test',
+    lastName: "test",
     email: 'test@example.com',
     password: 'password',
     age: 30,
@@ -68,6 +69,7 @@ const userData = {
 
 const userData2 = {
     name: 'test2',
+    lastName: "test2",
     email: 'test2@example.com',
     password: 'password',
     age: 30,

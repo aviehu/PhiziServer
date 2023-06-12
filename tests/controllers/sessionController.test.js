@@ -1,5 +1,3 @@
-// tests/controllers/session.controller.test.js
-
 const request = require('supertest');
 const app = require('../../src/app');
 const Session = require('../../src/models/sessionModel');
@@ -54,6 +52,22 @@ describe('Session controller', () => {
             expect(session.name).toEqual('test session');
         });
 
+        it('should avoid create a new session with the same name', async () => {
+            const pose = new Pose(poseData)
+            await pose.save()
+
+            await request(app)
+                .post('/api/sessions/addSession')
+                .send(sessionData);
+
+            const res = await request(app)
+                .post('/api/sessions/addSession')
+                .send(sessionData);
+
+            expect(res.status).toEqual(StatusCodes.BAD_REQUEST);
+            expect(res.body.error).toBeDefined();
+        });
+
     });
 
     describe('POST /api/sessions/updateSession', () => {
@@ -88,12 +102,33 @@ describe('Session controller', () => {
             expect(res.body.name).toEqual('test session');
         });
 
-        // it('should return a 404 error if session is not found', async () => {
-        //     const res = await request(app)
-        //         .get('/api/sessions/getSession/non_existing_session')
-        //     expect(res.status).toEqual(StatusCodes.BAD_REQUEST);
-        //     expect(res.body.error).toBeDefined();
-        // });
+        it('should return a 404 error if session is not found', async () => {
+            const res = await request(app)
+                .get('/api/sessions/getSession/non_existing_session')
+            expect(res.status).toEqual(StatusCodes.NOT_FOUND);
+            expect(res.body.error).toBeDefined();
+        });
+    });
+
+    describe('GET /api/sessions/deleteSession', () => {
+        it('should delete a session by name', async () => {
+            const pose = new Pose(poseData)
+            await pose.save()
+            const session = new Session(sessionData)
+            await session.save();
+
+            const res = await request(app).delete(`/api/sessions/deleteSession/test session`)
+
+            expect(res.statusCode).toEqual(StatusCodes.OK)
+            expect(res.body.name).toEqual('test session');
+        });
+
+        it('should return an error if session is not found', async () => {
+            const res = await request(app)
+                .delete('/api/sessions/deleteSession/non_existing_session')
+            expect(res.status).toEqual(StatusCodes.NOT_FOUND);
+            expect(res.body.error).toBeDefined();
+        });
     });
 
     describe('GET /api/sessions/getAllSessions', () => {
