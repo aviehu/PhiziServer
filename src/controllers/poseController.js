@@ -69,7 +69,7 @@ exports.getAllPoses = async (req, res) => {
 
 exports.getPosesByGoals = async (req, res) => {
     try {
-        const poses = await Pose.find({goals: {$in: req.body}});
+        const poses = await Pose.find({goals: {$in: req.body.goals}});
         res.status(StatusCodes.OK).json(poses);
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
