@@ -8,7 +8,7 @@
     "start": "node src/server.js",
     "teststart": "NODE_ENV=test node src/server.js",
     "sloadTest": "artillery run tests/loadTests/sessionLoadTest.yml",
-    "uloadTests": "artillery run tests/loadTests/usersLoadTest.yml"
+    "uloadTest": "artillery run tests/loadTests/usersLoadTest.yml"
   },
   "keywords": [],
   "author": "",
