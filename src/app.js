@@ -4,6 +4,7 @@ const userRoutes = require('./routes/userRoutes');
 const sessionRoutes = require('./routes/sessionRoutes');
 const poseRoutes = require('./routes/poseRoutes')
 const scoreRoutes = require('./routes/scoreRoutes')
+const messageRoutes = require('./routes/messageRoutes')
 const cors = require("cors");
 
 
@@ -16,5 +17,6 @@ app.use('/api/poses', poseRoutes)
 app.use('/api/users', userRoutes);
 app.use('/api/sessions', sessionRoutes);
 app.use('/api/scores', scoreRoutes)
+app.use('/api/messages', messageRoutes)
 
 module.exports = app;
